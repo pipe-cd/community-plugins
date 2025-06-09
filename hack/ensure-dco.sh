@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-MERGE_BASE=$(git merge-base HEAD origin/master)
+MERGE_BASE=$(git merge-base HEAD origin/main)
 COMMIT_HASHES=$(git log --no-merges --reverse --format=format:"%H" "$MERGE_BASE..HEAD")
 
 # check if the commit message contains the DCO sign-off
