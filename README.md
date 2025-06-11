@@ -1,6 +1,8 @@
 # community-plugins
 
+This community-plugins repository is a collection of [PipeCD plugins](https://pipecd.dev/blog/2024/11/28/overview-of-the-plan-for-pluginnable-pipecd/) developed by the community.
 
+_Note: Since the plugin system is still in development, the rules of this repository will be updated in the future._
 
 ## Objectives of This Repository
 
