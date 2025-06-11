@@ -109,7 +109,7 @@ func executeHello(cfg *pluginConfig, input *sdk.ExecuteStageInput[sdk.ConfigNone
 		return nil, fmt.Errorf("invalid stage options: %v", err)
 	}
 
-	lp.Infof("Hello %s from the example PLAN stage!\n CommonMessage: %s", stageOpts.Name, cfg.CommonMessage)
+	lp.Infof("Hello %s from the example HELLO stage!\n CommonMessage: %s", stageOpts.Name, cfg.CommonMessage)
 	return &sdk.ExecuteStageResponse{Status: sdk.StageStatusSuccess}, nil
 }
 
