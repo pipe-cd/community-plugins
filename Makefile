@@ -30,6 +30,11 @@ build/go: PLUGINS_BIN_DIR ?= ~/.piped/plugins
 build/go: PLUGINS_SRC_DIR ?= ./plugins
 build/go: PLUGINS_OUT_DIR ?= ${PWD}/.artifacts/plugins
 build/go: PLUGINS ?= $(shell find $(PLUGINS_SRC_DIR) -mindepth 1 -maxdepth 1 -type d | while read -r dir; do basename "$$dir"; done | paste -sd, -) # comma separated list of plugins. eg: PLUGINS=kubernetes,ecs,lambda
+build/go: BUILD_OPTS ?= -ldflags "-s -w" -trimpath
+build/go: BUILD_OS ?= $(shell go version | cut -d ' ' -f4 | cut -d/ -f1)
+build/go: BUILD_ARCH ?= $(shell go version | cut -d ' ' -f4 | cut -d/ -f2)
+build/go: BUILD_ENV ?= GOOS=$(BUILD_OS) GOARCH=$(BUILD_ARCH) CGO_ENABLED=0
+build/go: BIN_SUFFIX ?=
 build/go:
 	mkdir -p $(PLUGINS_BIN_DIR)
 	@echo "Building plugins..."
@@ -39,8 +44,8 @@ build/go:
 			continue; \
 		fi; \
 		echo "🔨 Building plugin: $$plugin"; \
-		CGO_ENABLED=0 go -C $(PLUGINS_SRC_DIR)/$$plugin build -o $(PLUGINS_OUT_DIR)/$$plugin . \
-			&& cp $(PLUGINS_OUT_DIR)/$$plugin $(PLUGINS_BIN_DIR)/$$plugin; \
+		$(BUILD_ENV) go -C $(PLUGINS_SRC_DIR)/$$plugin build $(BUILD_OPTS) -o $(PLUGINS_OUT_DIR)/$${plugin}$(BIN_SUFFIX) . \
+			&& cp $(PLUGINS_OUT_DIR)/$${plugin}$(BIN_SUFFIX) $(PLUGINS_BIN_DIR)/$$plugin; \
 		if [ $$? -ne 0 ]; then \
 			echo "❌ Failed to build plugin: $$plugin"; \
 			exit 1; \
