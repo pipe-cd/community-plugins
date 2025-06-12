@@ -211,6 +211,8 @@ github.com/pipe-cd/pipecd v0.52.0 h1:/WRzHs4hqeYRJBvu0ask6UAO7qBlvPgN1ulBdA1VjgE
 github.com/pipe-cd/pipecd v0.52.0/go.mod h1:Hi4d3mndTeY+hPB4YbN9aIgvP00EBV0CM+NQgyEwn98=
 github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250602070238-475d94da4d51 h1:mNGtsM/4xnSuMmcxP9Z02wSYiBDZdbJF5i8fw/YbCG4=
 github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250602070238-475d94da4d51/go.mod h1:WpVRto2ZLgFRJ4VOk8gtTChHNCrGa4UjRhGN81TCl2E=
+github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250612060254-2410ce2bf51a h1:j8dxOKU3lsDRDnlgLOQSjMoOhoM1yQNFo6CUmrKibe8=
+github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250612060254-2410ce2bf51a/go.mod h1:WpVRto2ZLgFRJ4VOk8gtTChHNCrGa4UjRhGN81TCl2E=
 github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

@@ -3,7 +3,7 @@ module pipe-cd/community-plugins/plugins/example-stage
 go 1.24.2
 
 require (
-	github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250602070238-475d94da4d51
+	github.com/pipe-cd/piped-plugin-sdk-go v0.0.0-20250612060254-2410ce2bf51a
 	github.com/stretchr/testify v1.10.0
 )
 
