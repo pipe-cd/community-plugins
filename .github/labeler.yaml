@@ -13,4 +13,8 @@ plugin/azure-functions:
 plugin/example-stage:
   - changed-files:
       - any-glob-to-any-file: plugins/example-stage/**
+
+plugin/opentofu:
+  - changed-files:
+      - any-glob-to-any-file: plugins/opentofu/**
 # --- End plugins list ---

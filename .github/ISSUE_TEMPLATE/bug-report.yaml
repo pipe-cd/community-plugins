@@ -19,6 +19,7 @@ body:
         # --- Start plugins list ---
         - azure-functions
         - example-stage
+        - opentofu
         # --- End plugins list ---
 
   - type: textarea
