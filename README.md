@@ -4,6 +4,8 @@ This community-plugins repository is a collection of [PipeCD plugins](https://pi
 
 _Note: Since the plugin system is still in development, the rules of this repository will be updated in the future._
 
+To create a new plugin here, see [CONTRIBUTING.md](https://github.com/pipe-cd/community-plugins/blob/main/CONTRIBUTING.md#adding-a-new-plugin)!
+
 ## Objectives of This Repository
 
 - **Accelerate**: To extend PipeCD by distributed developers without touching the core code.
