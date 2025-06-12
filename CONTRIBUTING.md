@@ -10,7 +10,7 @@ Please follow the steps below. **You MUST NOT initialize a new plugin by opening
 
 1. Please [open a 'New plugin proposal' issue](https://github.com/pipe-cd/community-plugins/issues/new?template=new-plugin.yaml).
 2. A maintainer will create and merge a PR to initialize the plugin directory, CODEOWNERS, and so on by [the 'New Plugin' workflow](https://github.com/pipe-cd/community-plugins/actions/workflows/new-plugin.yaml).
-3. The maintainer will close the issue and you can start working on the plugin.
+3. The maintainer will close the issue, and you can start working on the plugin.
 
 ## Becoming a Code Owner
 
@@ -18,14 +18,14 @@ A code owner is responsible for maintaining the plugin, including triaging issue
 
 There are two ways to become a code owner:
 - When [initializing a new plugin](#adding-a-new-plugin)
-- When the current code owner(s) invites a new one. Then, follow these steps:
+- When the current code owner(s) invite a new one. Then, follow these steps:
     1. Update the Code Owners in the README.md of the plugin.
     2. Execute `make sync/sync` to update the CODEOWNERS file.
     3. Create a PR and get it merged.
 
 _What to do when a code owner becomes inactive?: TBD_
 
-**NOTE: CodeOwners does NOT have write access to the repository yet. Please ask maintainers when editing Issues/PRs including merging a PR. We're planning to add write access to CodeOwners in the future.**
+**NOTE: CodeOwners does NOT have write access to the repository yet. Please ask maintainers when editing Issues/PRs, including merging a PR. We're planning to add write access to CodeOwners in the future.**
 
 ## Issues
 
@@ -42,8 +42,8 @@ When opening a new issue, please make sure:
 ### Working on Issues
 
 1. Before working on an issue, please leave a comment saying "I'd like to work on this." and we will assign the issue to you.
-   - When you are assigned to an issue but seem inactive for some weeks, we would unassign you.
-2. Before submitting a Pull Request, we expect you to investigate the issue and comment what to do. Then you can discuss how to solve the issue and reduce the communication on the Pull Request.
+   - When you are assigned to an issue but seem inactive for some weeks, we will unassign you.
+2. Before submitting a Pull Request, we expect you to investigate the issue and comment on what to do. Then you can discuss how to solve the issue and reduce the communication on the Pull Request.
 
 ## Pull Request
 
@@ -68,16 +68,16 @@ When submitting a pull request, please ensure the following:
 
 TBD
 
-See [example-stage plugin](examples/example-stage).
+See [example-stage plugin](plugins/example-stage).
 
-We're preparing a guide of the SDK/API.
+We're preparing a guide to use the SDK/API.
 
 
 ## Release Procedure
 
 TBD
 
-Each plugin will probably have their own version.
+Each plugin will probably have its own version.
 
 ## License on contribution
 
