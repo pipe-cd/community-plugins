@@ -20,6 +20,7 @@ body:
         - azure-functions
         - example-stage
         - opentofu
+        - sqldef
         # --- End plugins list ---
 
   - type: textarea

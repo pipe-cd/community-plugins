@@ -17,4 +17,8 @@ plugin/example-stage:
 plugin/opentofu:
   - changed-files:
       - any-glob-to-any-file: plugins/opentofu/**
+
+plugin/sqldef:
+  - changed-files:
+      - any-glob-to-any-file: plugins/sqldef/**
 # --- End plugins list ---

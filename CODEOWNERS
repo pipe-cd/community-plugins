@@ -7,4 +7,5 @@
 plugins/azure-functions/ @pipe-cd/pipecd-approvers @hiep-tk 
 plugins/example-stage/ @pipe-cd/pipecd-approvers @pipe-cd/pipecd-approvers 
 plugins/opentofu/ @pipe-cd/pipecd-approvers @sagnik3788 
+plugins/sqldef/ @pipe-cd/pipecd-approvers @kadai0308 
 # --- End plugins ---
