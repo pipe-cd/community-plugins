@@ -14,56 +14,69 @@
 
 package config
 
+// Config represents the plugin-scoped configuration.
 type Config struct{}
 
-// OpenTofuDeployTargetConfig represents the deployment scope configuration.
-type OpenTofuDeployTargetConfig struct {
-	// The version of OpenTofu to use.
+// DeployTargetConfig represents the deploy-target-scoped configuration.
+type DeployTargetConfig struct {
+	// List of variables that will be set directly on opentofu commands with "-var" flag.
+	// The variable must be formatted by "key=value" as below:
+	// "image_id=ami-abc123"
+	// 'image_id_list=["ami-abc123","ami-def456"]'
+	// 'image_id_map={"us-east-1":"ami-abc123","us-east-2":"ami-def456"}'
+	Vars []string `json:"vars,omitempty"`
+	// Enable drift detection.
+	// TODO: This is a temporary option because  drift detection is buggy and has performance issues. This will be possibly removed in the future release.
+	DriftDetectionEnabled *bool `json:"driftDetectionEnabled" default:"true"`
+}
+
+// ApplicationConfigSpec represents the application-scoped plugin config.
+type ApplicationConfigSpec struct {
+	// The opentofu workspace name.
+	// Empty means "default" workspace.
+	Workspace string `json:"workspace,omitempty"`
+	// The version of opentofu that should be used.
 	// Empty means the pre-installed version will be used.
-	Version string `json:"version,omitempty"`
-	// The working directory for the deployment target.
-	WorkingDir string `json:"workingDir,omitempty"`
-	// The environment variables for the deployment target.
-	Env []string `json:"env,omitempty"`
-	// Indicates whether to perform initialization for the deployment target.
-	Init bool `json:"init"`
-	// The configuration file path.
-	Config string `json:"config,omitempty"`
+	OpenTofuVersion string `json:"openTofuVersion,omitempty"`
+	// List of variables that will be set directly on opentofu commands with "-var" flag.
+	// The variable must be formatted by "key=value" as below:
+	// "image_id=ami-abc123"
+	// 'image_id_list=["ami-abc123","ami-def456"]'
+	// 'image_id_map={"us-east-1":"ami-abc123","us-east-2":"ami-def456"}'
+	Vars []string `json:"vars,omitempty"`
+	// List of variable files that will be set on opentofu commands with "-var-file" flag.
+	VarFiles []string `json:"varFiles,omitempty"`
+	// List of additional flags will be used while executing opentofu commands.
+	CommandFlags OpenTofuCommandFlags `json:"commandFlags"`
+	// List of additional environment variables will be used while executing opentofu commands.
+	CommandEnvs OpenTofuCommandEnvs `json:"commandEnvs"`
 }
 
-// OpenTofuApplicationSpec represents the application scope configuration.
-type OpenTofuApplicationSpec struct {
-	// The input configuration for OpenTofu deployment stages.
-	Input OpenTofuDeploymentInput `json:"input"`
-}
-
-func (s *OpenTofuApplicationSpec) Validate() error {
-	// TODO: Validate OpenTofuApplicationSpec fields.
-	return nil
-}
-
-// OpenTofuDeploymentInput is the input for OpenTofu stages.
-type OpenTofuDeploymentInput struct {
-	// The version of OpenTofu to use.
-	Version string `json:"version,omitempty"`
-	// The configuration file path for the deployment input.
-	Config string `json:"config,omitempty"`
-	// The working directory for the deployment input.
-	WorkingDir string `json:"workingDir,omitempty"`
-	// The environment variables for the deployment input.
-	Env []string `json:"env,omitempty"`
-	// Indicates whether to perform initialization for the deployment input.
-	Init bool `json:"init"`
-}
-
-// OpenTofuPlanStageOptions contains all configurable values for a OPENTOFU_PLAN stage.
+// OpenTofuPlanStageOptions contains all configurable values for an OPENTOFU_PLAN stage.
 type OpenTofuPlanStageOptions struct {
-	// TODO: Add options for plan stage.
 }
 
-// OpenTofuApplyStageOptions contains all configurable values for a OPENTOFU_APPLY stage.
+// OpenTofuApplyStageOptions contains all configurable values for an OPENTOFU_APPLY stage.
 type OpenTofuApplyStageOptions struct {
-	// Whether to automatically approve changes during the apply stage.
-	// Default: false
-	AutoApprove bool `json:"autoApprove"`
+}
+
+// OpenTofuCommandFlags contains all additional flags that will be used while executing opentofu commands.
+type OpenTofuCommandFlags struct {
+	Shared []string `json:"shared"`
+	Init   []string `json:"init"`
+	Plan   []string `json:"plan"`
+	Apply  []string `json:"apply"`
+}
+
+// OpenTofuCommandEnvs contains all additional environment variables that will be used while executing opentofu commands.
+type OpenTofuCommandEnvs struct {
+	Shared []string `json:"shared"`
+	Init   []string `json:"init"`
+	Plan   []string `json:"plan"`
+	Apply  []string `json:"apply"`
+}
+
+func (s *ApplicationConfigSpec) Validate() error {
+	// TODO: Validate ApplicationConfigSpec fields.
+	return nil
 }
