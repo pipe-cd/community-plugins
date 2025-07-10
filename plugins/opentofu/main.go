@@ -14,8 +14,24 @@
 
 package main
 
-import "fmt"
+import (
+	"log"
+
+	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
+
+	"github.com/pipe-cd/community-plugins/plugins/opentofu/deployment"
+)
 
 func main() {
-	fmt.Println("OpenTofu Plugin")
+	plugin, err := sdk.NewPlugin(
+		"v1.0.0",
+		sdk.WithDeploymentPlugin(&deployment.Plugin{}),
+	)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := plugin.Run(); err != nil {
+		log.Fatalln(err)
+	}
 }
