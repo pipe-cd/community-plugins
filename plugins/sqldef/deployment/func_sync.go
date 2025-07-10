@@ -6,7 +6,6 @@ import (
 	"github.com/pipe-cd/community-plugins/plugins/sqldef/config"
 	"github.com/pipe-cd/community-plugins/plugins/sqldef/provider"
 	toolRegistryPkg "github.com/pipe-cd/community-plugins/plugins/sqldef/toolregistry"
-
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 )
 
@@ -29,7 +28,12 @@ func (p *Plugin) executeSqldefSyncStage(ctx context.Context, dts []*sdk.DeployTa
 
 		lp.Info(fmt.Sprintf("dt: %+v\n", dt))
 
-		sqldef := provider.NewSqldef(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, dt.Config.SchemaFilePath, sqlDefPath)
+		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
+		lp.Info(fmt.Sprintf("appDir: %s", appDir))
+
+		schemaPath := fmt.Sprintf("%s/%s", appDir, dt.Config.SchemaFileName)
+
+		sqldef := provider.NewSqldef(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
 
 		err = sqldef.Execute(ctx, dt.Config.DryRun, dt.Config.EnableDrop)
 		if err != nil {

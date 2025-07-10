@@ -53,10 +53,7 @@ func (p *Plugin) DetermineVersions(ctx context.Context, _ *sdk.ConfigNone, input
 
 // DetermineStrategy determines the strategy for the deployment.
 func (p *Plugin) DetermineStrategy(ctx context.Context, _ *sdk.ConfigNone, input *sdk.DetermineStrategyInput[config.SqldefApplicationSpec]) (*sdk.DetermineStrategyResponse, error) {
-	// MOCK first, TODO
-	return &sdk.DetermineStrategyResponse{
-		Strategy: sdk.SyncStrategyPipelineSync,
-	}, nil
+	return nil, nil
 }
 
 // BuildQuickSyncStages returns the stages for the quick sync strategy.
