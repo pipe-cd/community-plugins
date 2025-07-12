@@ -11,10 +11,8 @@ type DeployTargetConfig struct {
 	Host     string `json:"host"`
 	Port     string `json:"port"`
 	DBName   string `json:"db_name"`
-	// sqldef input parameters
+	// schema file that apply to target
 	SchemaFileName string `json:"schema_file_name"`
-	DryRun         bool   `json:"dry_run"`
-	EnableDrop     bool   `json:"enable_drop"`
 }
 
 type ApplicationConfigSpec struct {
