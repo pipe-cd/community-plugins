@@ -8,8 +8,6 @@ type SqldefDeployTargetConfig struct {
 	Port           string `json:"port"`
 	DBName         string `json:"db_name"`
 	SchemaFileName string `json:"schema_file_name"`
-	DryRun         bool   `json:"dry_run"`
-	EnableDrop     bool   `json:"enable_drop"`
 }
 
 type SqldefApplicationSpec struct {

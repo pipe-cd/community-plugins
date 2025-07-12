@@ -7,5 +7,5 @@ include ../../Makefile.common
 # common/test/go:
 # 	XXX=YYY go test -failfast -race ./...
 
-build:
+build/go:
 	go build

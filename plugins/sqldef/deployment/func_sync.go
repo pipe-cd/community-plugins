@@ -12,6 +12,14 @@ import (
 func (p *Plugin) executeSqldefSyncStage(ctx context.Context, dts []*sdk.DeployTarget[config.SqldefDeployTargetConfig], input *sdk.ExecuteStageInput[config.SqldefApplicationSpec]) sdk.StageStatus {
 	lp := input.Client.LogPersister()
 	lp.Info("Start syncing the deployment")
+
+	// stage config parsing example:
+	//stageCfg, err := config.DecodeConfig(input.Request.StageConfig)
+	//if err != nil {
+	//	lp.Errorf("Failed while decode stage config (%v)", err)
+	//	return sdk.StageStatusFailure
+	//}
+
 	// Currently, we create them every time the stage is executed beucause we can't pass input.Client.toolRegistry to the plugin when starting the plugin.
 	toolRegistry := toolRegistryPkg.NewRegistry(input.Client.ToolRegistry())
 
@@ -35,7 +43,7 @@ func (p *Plugin) executeSqldefSyncStage(ctx context.Context, dts []*sdk.DeployTa
 
 		sqldef := provider.NewSqldef(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
 
-		err = sqldef.Execute(ctx, dt.Config.DryRun, dt.Config.EnableDrop)
+		err = sqldef.Execute(ctx)
 		if err != nil {
 			lp.Errorf("Failed while syncing the deployment (%v)", err)
 		}

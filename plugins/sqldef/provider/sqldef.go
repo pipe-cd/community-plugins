@@ -71,20 +71,21 @@ func (s *Sqldef) ShowCurrentSchema(ctx context.Context) (string, error) {
 	return outBuf.String(), nil
 }
 
-func (s *Sqldef) Execute(ctx context.Context, dryRun, enableDrop bool) error {
+func (s *Sqldef) Execute(ctx context.Context) error {
 
 	args := []string{
 		"-u", s.username,
 		"-p", s.password,
 		"-h", s.host,
 		"-P", s.port,
+		"--enable-drop",
 	}
+
+	// add dryRun here for test
+	dryRun := false
 
 	if dryRun {
 		args = append(args, "--dry-run")
-	}
-	if enableDrop {
-		args = append(args, "--enable-drop")
 	}
 
 	args = append(args, s.DBName)

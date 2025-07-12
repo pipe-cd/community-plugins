@@ -5,13 +5,13 @@ import (
 )
 
 const (
-	SqldefFuncSync     string = "SQLDEF_FUNCTION_SYNC"
-	SqldefFuncRollback string = "SQLDEF_FUNCTION_ROLLBACK"
+	SqldefSync     string = "SQLDEF_SYNC"
+	SqldefRollback string = "SQLDEF_ROLLBACK"
 )
 
 var allStages = []string{
-	SqldefFuncSync,
-	SqldefFuncRollback,
+	SqldefSync,
+	SqldefRollback,
 }
 
 // buildPipelineStages builds the pipeline stages with the given SDK stages.
@@ -36,7 +36,7 @@ func buildPipelineStages(stages []sdk.StageConfig, autoRollback bool) []sdk.Pipe
 	//	}).Index
 	//
 	//	out = append(out, sdk.PipelineStage{
-	//		Name:               SqldefFuncRollback,
+	//		Name:               SqldefRollback,
 	//		Index:              minIndex,
 	//		Rollback:           true,
 	//		Metadata:           make(map[string]string, 0),
@@ -51,14 +51,14 @@ func buildQuickSync(autoRollback bool) []sdk.QuickSyncStage {
 	// MOCK first, TODO
 	out := make([]sdk.QuickSyncStage, 0, 2)
 	out = append(out, sdk.QuickSyncStage{
-		Name:               string(SqldefFuncSync),
+		Name:               SqldefSync,
 		Description:        "", //TODO: add description
 		Metadata:           map[string]string{},
 		AvailableOperation: sdk.ManualOperationNone,
 	})
 	if autoRollback {
 		out = append(out, sdk.QuickSyncStage{
-			Name:               string(SqldefFuncRollback),
+			Name:               string(SqldefRollback),
 			Description:        "", // TODO
 			Metadata:           map[string]string{},
 			AvailableOperation: sdk.ManualOperationNone,

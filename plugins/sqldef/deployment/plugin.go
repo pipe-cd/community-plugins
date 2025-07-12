@@ -27,8 +27,9 @@ func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, _ *sdk.ConfigNone,
 
 // ExecuteStage executes the stage.
 func (p *Plugin) ExecuteStage(ctx context.Context, _ *sdk.ConfigNone, dts []*sdk.DeployTarget[config.SqldefDeployTargetConfig], input *sdk.ExecuteStageInput[config.SqldefApplicationSpec]) (*sdk.ExecuteStageResponse, error) {
+
 	switch input.Request.StageName {
-	case SqldefFuncSync:
+	case SqldefSync:
 		return &sdk.ExecuteStageResponse{
 			Status: p.executeSqldefSyncStage(ctx, dts, input),
 		}, nil
