@@ -6,3 +6,6 @@ include ../../Makefile.common
 # .PHONY: common/test/go
 # common/test/go:
 # 	XXX=YYY go test -failfast -race ./...
+
+build/go:
+	go build
