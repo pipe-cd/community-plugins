@@ -16,10 +16,7 @@ package toolregistry
 
 const MysqldefInstallScript = `
 cd {{ .TmpDir }}
-pwd
 curl -LO https://github.com/sqldef/sqldef/releases/download/v{{ .Version }}/mysqldef_{{ .Os }}_{{ .Arch }}.zip
-
-echo https://github.com/sqldef/sqldef/releases/download/v{{ .Version }}/mysqldef_{{ .Os }}_{{ .Arch }}.zip 
 
 unzip mysqldef_{{ .Os }}_{{ .Arch }}.zip
 chmod +x mysqldef
