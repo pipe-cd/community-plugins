@@ -18,10 +18,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/pipe-cd/piped-plugin-sdk-go/toolregistry/toolregistrytest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/pipe-cd/piped-plugin-sdk-go/toolregistry/toolregistrytest"
 )
 
 func TestRegistry_Sqldef(t *testing.T) {
