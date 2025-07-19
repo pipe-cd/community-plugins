@@ -110,7 +110,7 @@ func (p *Plugin) BuildQuickSyncStages(
 	stages := make([]sdk.QuickSyncStage, 0, 2)
 	stages = append(stages, sdk.QuickSyncStage{
 		Name:               SqldefStageApply,
-		Description:        "Apply all changes",
+		Description:        "Apply changes to target DB",
 		Rollback:           false,
 		Metadata:           map[string]string{},
 		AvailableOperation: sdk.ManualOperationNone,
