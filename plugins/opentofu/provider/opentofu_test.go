@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package opentofu
+package provider
 
 import (
 	"testing"
@@ -100,7 +100,7 @@ you run "opentofu init" in the future.
 
 OpenTofu has been successfully initialized!
 
-You may now begin working with OpenTofu. Try running "opentofu plan" to see
+You may now begin working with OpenTofu. Try running "tofu plan" to see
 any changes that are required for your infrastructure. All OpenTofu commands
 should now work.
 
@@ -146,7 +146,7 @@ you run "opentofu init" in the future.
 
 OpenTofu has been successfully initialized!
 
-You may now begin working with OpenTofu. Try running "opentofu plan" to see
+You may now begin working with OpenTofu. Try running "tofu plan" to see
 any changes that are required for your infrastructure. All OpenTofu commands
 should now work.
 
@@ -262,7 +262,7 @@ you run "opentofu init" in the future.
 
 OpenTofu has been successfully initialized!
 
-You may now begin working with OpenTofu. Try running "opentofu plan" to see
+You may now begin working with OpenTofu. Try running "tofu plan" to see
 any changes that are required for your infrastructure. All OpenTofu commands
 should now work.
 

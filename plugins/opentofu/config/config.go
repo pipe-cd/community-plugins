@@ -54,6 +54,8 @@ type ApplicationConfigSpec struct {
 
 // OpenTofuPlanStageOptions contains all configurable values for an OPENTOFU_PLAN stage.
 type OpenTofuPlanStageOptions struct {
+	// Exit the pipeline if the result is "No Changes" with success status.
+	ExitOnNoChanges bool `json:"exitOnNoChanges"`
 }
 
 // OpenTofuApplyStageOptions contains all configurable values for an OPENTOFU_APPLY stage.
