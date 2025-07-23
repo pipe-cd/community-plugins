@@ -11,10 +11,10 @@ import (
 
 const (
 	// run sqldef with --dry-run
-	SqldefStagePlan  string = "SQLDEF_PLAN"
-	SqldefStageApply string = "SQLDEF_APPLY"
+	sqldefStagePlan  string = "SQLDEF_PLAN"
+	sqldefStageApply string = "SQLDEF_APPLY"
 	// by running with previous DB schema dump
-	SqldefStageRollback string = "SQLDEF_ROLLBACK"
+	sqldefStageRollback string = "SQLDEF_ROLLBACK"
 )
 
 // Plugin implements sdk.DeploymentPlugin for OpenTofu.
@@ -24,9 +24,9 @@ var _ sdk.DeploymentPlugin[config.Config, config.DeployTargetConfig, config.Appl
 
 func (*Plugin) FetchDefinedStages() []string {
 	return []string{
-		SqldefStagePlan,
-		SqldefStageApply,
-		SqldefStageRollback,
+		sqldefStagePlan,
+		sqldefStageApply,
+		sqldefStageRollback,
 	}
 }
 
@@ -53,7 +53,7 @@ func (p *Plugin) BuildPipelineSyncStages(
 		// we set the index of the rollback stage to the minimum index of all stages.
 		minIndex := slices.MinFunc(reqStages, func(a, b sdk.StageConfig) int { return a.Index - b.Index }).Index
 		out = append(out, sdk.PipelineStage{
-			Name:               SqldefStageRollback,
+			Name:               sqldefStageRollback,
 			Index:              minIndex,
 			Rollback:           true,
 			Metadata:           make(map[string]string),
@@ -79,15 +79,17 @@ func (p *Plugin) ExecuteStage(
 	}, nil
 }
 
-// No need for the sqldef plugin
 // DetermineVersions determines the versions of artifacts for the deployment.
 func (p *Plugin) DetermineVersions(
 	ctx context.Context,
 	cfg *config.Config,
 	input *sdk.DetermineVersionsInput[config.ApplicationConfigSpec],
 ) (*sdk.DetermineVersionsResponse, error) {
+	// show the commit hash as the version
 	return &sdk.DetermineVersionsResponse{
-		Versions: []sdk.ArtifactVersion{},
+		Versions: []sdk.ArtifactVersion{
+			{Version: input.Request.DeploymentSource.CommitHash},
+		},
 	}, nil
 }
 
@@ -109,7 +111,7 @@ func (p *Plugin) BuildQuickSyncStages(
 ) (*sdk.BuildQuickSyncStagesResponse, error) {
 	stages := make([]sdk.QuickSyncStage, 0, 2)
 	stages = append(stages, sdk.QuickSyncStage{
-		Name:               SqldefStageApply,
+		Name:               sqldefStageApply,
 		Description:        "Apply changes to target DB",
 		Rollback:           false,
 		Metadata:           map[string]string{},
@@ -118,7 +120,7 @@ func (p *Plugin) BuildQuickSyncStages(
 
 	if input.Request.Rollback {
 		stages = append(stages, sdk.QuickSyncStage{
-			Name:               SqldefStageRollback,
+			Name:               sqldefStageRollback,
 			Description:        "Rollback to previous DB schema",
 			Rollback:           true,
 			Metadata:           map[string]string{},

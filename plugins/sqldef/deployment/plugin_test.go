@@ -32,16 +32,16 @@ func Test_BuildPipelineSyncStages(t *testing.T) {
 			input: &sdk.BuildPipelineSyncStagesInput{
 				Request: sdk.BuildPipelineSyncStagesRequest{
 					Stages: []sdk.StageConfig{
-						{Name: SqldefStagePlan, Index: 1},
-						{Name: SqldefStageApply, Index: 2},
+						{Name: sqldefStagePlan, Index: 1},
+						{Name: sqldefStageApply, Index: 2},
 					},
 					Rollback: false,
 				},
 			},
 			expected: &sdk.BuildPipelineSyncStagesResponse{
 				Stages: []sdk.PipelineStage{
-					{Name: SqldefStagePlan, Index: 1, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
-					{Name: SqldefStageApply, Index: 2, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
+					{Name: sqldefStagePlan, Index: 1, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
+					{Name: sqldefStageApply, Index: 2, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
 				},
 			},
 		},
@@ -50,17 +50,17 @@ func Test_BuildPipelineSyncStages(t *testing.T) {
 			input: &sdk.BuildPipelineSyncStagesInput{
 				Request: sdk.BuildPipelineSyncStagesRequest{
 					Stages: []sdk.StageConfig{
-						{Name: SqldefStagePlan, Index: 4},
-						{Name: SqldefStageApply, Index: 3},
+						{Name: sqldefStagePlan, Index: 4},
+						{Name: sqldefStageApply, Index: 3},
 					},
 					Rollback: true,
 				},
 			},
 			expected: &sdk.BuildPipelineSyncStagesResponse{
 				Stages: []sdk.PipelineStage{
-					{Name: SqldefStagePlan, Index: 4, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
-					{Name: SqldefStageApply, Index: 3, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
-					{Name: SqldefStageRollback, Index: 3, Rollback: true, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
+					{Name: sqldefStagePlan, Index: 4, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
+					{Name: sqldefStageApply, Index: 3, Rollback: false, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
+					{Name: sqldefStageRollback, Index: 3, Rollback: true, Metadata: map[string]string{}, AvailableOperation: sdk.ManualOperationNone},
 				},
 			},
 		},
@@ -97,7 +97,7 @@ func TestPlugin_BuildQuickSyncStages(t *testing.T) {
 			expected: &sdk.BuildQuickSyncStagesResponse{
 				Stages: []sdk.QuickSyncStage{
 					{
-						Name:               SqldefStageApply,
+						Name:               sqldefStageApply,
 						Description:        "Apply changes to target DB",
 						Rollback:           false,
 						Metadata:           map[string]string{},
@@ -116,14 +116,14 @@ func TestPlugin_BuildQuickSyncStages(t *testing.T) {
 			expected: &sdk.BuildQuickSyncStagesResponse{
 				Stages: []sdk.QuickSyncStage{
 					{
-						Name:               SqldefStageApply,
+						Name:               sqldefStageApply,
 						Description:        "Apply changes to target DB",
 						Rollback:           false,
 						Metadata:           map[string]string{},
 						AvailableOperation: sdk.ManualOperationNone,
 					},
 					{
-						Name:               SqldefStageRollback,
+						Name:               sqldefStageRollback,
 						Description:        "Rollback to previous DB schema",
 						Rollback:           true,
 						Metadata:           map[string]string{},
