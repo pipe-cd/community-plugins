@@ -79,7 +79,6 @@ func (p *Plugin) ExecuteStage(
 	}, nil
 }
 
-// No need for the sqldef plugin
 // DetermineVersions determines the versions of artifacts for the deployment.
 func (p *Plugin) DetermineVersions(
 	ctx context.Context,
