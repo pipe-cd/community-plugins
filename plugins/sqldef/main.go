@@ -16,6 +16,7 @@ package main
 
 import (
 	"github.com/pipe-cd/community-plugins/plugins/sqldef/deployment"
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/provider"
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 	"log"
 )
@@ -23,7 +24,9 @@ import (
 func main() {
 	plugin, err := sdk.NewPlugin(
 		"0.0.1",
-		sdk.WithDeploymentPlugin(&deployment.Plugin{}),
+		sdk.WithDeploymentPlugin(&deployment.Plugin{
+			sqldef: &provider.SqldefProviderImpl{},
+		}),
 	)
 	if err != nil {
 		log.Fatalln(err)
