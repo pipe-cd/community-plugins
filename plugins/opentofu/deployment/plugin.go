@@ -16,6 +16,7 @@ package deployment
 
 import (
 	"context"
+	"errors"
 	"slices"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
@@ -77,16 +78,13 @@ func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, cfg *config.Config
 }
 
 // ExecuteStage executes the given stage.
-func (p *Plugin) ExecuteStage(
-	ctx context.Context,
-	cfg *config.Config,
-	dts []*sdk.DeployTarget[config.DeployTargetConfig],
-	input *sdk.ExecuteStageInput[config.ApplicationConfigSpec],
-) (*sdk.ExecuteStageResponse, error) {
-	// TODO: Implement ExecuteStage logic
-	return &sdk.ExecuteStageResponse{
-		Status: sdk.StageStatusSuccess,
-	}, nil
+func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) (*sdk.ExecuteStageResponse, error) {
+	if input.Request.StageName == stagePlan {
+		return &sdk.ExecuteStageResponse{
+			Status: p.executePlanStage(ctx, input, dts),
+		}, nil
+	}
+	return nil, errors.New("unimplemented or unsupported stage")
 }
 
 // DetermineVersions determines the versions of artifacts for the deployment.
