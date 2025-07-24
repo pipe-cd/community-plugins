@@ -2,6 +2,7 @@ package deployment
 
 import (
 	"context"
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/provider"
 	"slices"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
@@ -18,7 +19,9 @@ const (
 )
 
 // Plugin implements sdk.DeploymentPlugin for OpenTofu.
-type Plugin struct{}
+type Plugin struct {
+	sqldef provider.SqldefProvider
+}
 
 var _ sdk.DeploymentPlugin[config.Config, config.DeployTargetConfig, config.ApplicationConfigSpec] = (*Plugin)(nil)
 
@@ -73,7 +76,14 @@ func (p *Plugin) ExecuteStage(
 	dts []*sdk.DeployTarget[config.DeployTargetConfig],
 	input *sdk.ExecuteStageInput[config.ApplicationConfigSpec],
 ) (*sdk.ExecuteStageResponse, error) {
-	// TODO: Implement ExecuteStage logic
+
+	switch input.Request.StageName {
+	case sqldefStagePlan:
+		return &sdk.ExecuteStageResponse{
+			Status: p.executePlanStage(ctx, dts, input),
+		}, nil
+	}
+
 	return &sdk.ExecuteStageResponse{
 		Status: sdk.StageStatusSuccess,
 	}, nil
