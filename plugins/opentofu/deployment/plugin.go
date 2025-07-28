@@ -79,12 +79,18 @@ func (p *Plugin) BuildPipelineSyncStages(ctx context.Context, cfg *config.Config
 
 // ExecuteStage executes the given stage.
 func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) (*sdk.ExecuteStageResponse, error) {
-	if input.Request.StageName == stagePlan {
+	switch input.Request.StageName {
+	case stagePlan:
 		return &sdk.ExecuteStageResponse{
 			Status: p.executePlanStage(ctx, input, dts),
 		}, nil
+	case stageApply:
+		panic("unimplemented")
+	case stageRollback:
+		panic("unimplemented")
+	default:
+		return nil, errors.New("unsupported stage")
 	}
-	return nil, errors.New("unimplemented or unsupported stage")
 }
 
 // DetermineVersions determines the versions of artifacts for the deployment.
