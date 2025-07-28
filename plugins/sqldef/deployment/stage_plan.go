@@ -57,9 +57,9 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 			return sdk.StageStatusFailure
 		}
 
-		p.sqldef.Init(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
+		p.Sqldef.Init(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
 
-		if err := p.sqldef.Execute(ctx, true); err != nil {
+		if err := p.Sqldef.Execute(ctx, true); err != nil {
 			lp.Errorf("Failed while plan the deployment (%v)", err)
 			return sdk.StageStatusFailure
 		}

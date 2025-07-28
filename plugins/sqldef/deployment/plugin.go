@@ -21,7 +21,7 @@ const (
 
 // Plugin implements sdk.DeploymentPlugin for OpenTofu.
 type Plugin struct {
-	sqldef provider.SqldefProvider
+	Sqldef provider.SqldefProvider
 }
 
 var _ sdk.DeploymentPlugin[config.Config, config.DeployTargetConfig, config.ApplicationConfigSpec] = (*Plugin)(nil)

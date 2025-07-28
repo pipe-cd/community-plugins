@@ -25,7 +25,7 @@ func main() {
 	plugin, err := sdk.NewPlugin(
 		"0.0.1",
 		sdk.WithDeploymentPlugin(&deployment.Plugin{
-			sqldef: &provider.SqldefProviderImpl{},
+			Sqldef: &provider.SqldefProviderImpl{},
 		}),
 	)
 	if err != nil {

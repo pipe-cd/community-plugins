@@ -38,7 +38,7 @@ func (m *MockSqldefProvider) Execute(ctx context.Context, dryRun bool) error {
 // createPluginWithMockSqldef creates a Plugin instance with a mock sqldef provider
 func createPluginWithMockSqldef(mockProvider provider.SqldefProvider) *Plugin {
 	return &Plugin{
-		sqldef: mockProvider,
+		Sqldef: mockProvider,
 	}
 }
 
