@@ -26,14 +26,7 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 			dt.Config.Host,
 			dt.Config.Port,
 			dt.Config.DBName,
-			dt.Config.SchemaFileName,
 		)
-
-		// check dt.Config.SchemaFileName
-		if dt.Config.SchemaFileName == "" {
-			lp.Errorf("Configuration error: SchemaFileName is empty. Please ensure 'SchemaFileName' is properly set in dt.Config before running this stage.")
-			return sdk.StageStatusFailure
-		}
 
 		// check db_type from dt.config to choose which sqldef binary to download
 		// Now we only support mysql temporarily
@@ -58,11 +51,17 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 		}
 
 		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
-		schemaPath := fmt.Sprintf("%s/%s", appDir, dt.Config.SchemaFileName)
+		schemaPath, err := findFirstSQLFile(appDir)
+		if err != nil {
+			lp.Errorf("Failed while finding schema file (%v)", err)
+			return sdk.StageStatusFailure
+		}
+
 		p.sqldef.Init(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
 
 		if err := p.sqldef.Execute(ctx, true); err != nil {
 			lp.Errorf("Failed while plan the deployment (%v)", err)
+			return sdk.StageStatusFailure
 		}
 	}
 

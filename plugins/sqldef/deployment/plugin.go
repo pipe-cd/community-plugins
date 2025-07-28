@@ -11,10 +11,11 @@ import (
 )
 
 const (
-	// run sqldef with --dry-run
-	sqldefStagePlan  string = "SQLDEF_PLAN"
+	// show the SQL plan about to execute without applying changes to target DB
+	sqldefStagePlan string = "SQLDEF_PLAN"
+	// apply changes to target DB
 	sqldefStageApply string = "SQLDEF_APPLY"
-	// by running with previous DB schema dump
+	// revert changes to target DB
 	sqldefStageRollback string = "SQLDEF_ROLLBACK"
 )
 

@@ -20,8 +20,6 @@ type DeployTargetConfig struct {
 	Host     string `json:"host"`
 	Port     string `json:"port"`
 	DBName   string `json:"db_name"`
-	// schema file that apply to target
-	SchemaFileName string `json:"schema_file_name"`
 }
 
 type ApplicationConfigSpec struct {
