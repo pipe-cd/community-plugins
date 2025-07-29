@@ -94,14 +94,15 @@ func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sd
 }
 
 // DetermineVersions determines the versions of artifacts for the deployment.
-func (p *Plugin) DetermineVersions(
-	ctx context.Context,
-	cfg *config.Config,
-	input *sdk.DetermineVersionsInput[config.ApplicationConfigSpec],
-) (*sdk.DetermineVersionsResponse, error) {
-	// TODO: Implement DetermineVersions logic
+func (p *Plugin) DetermineVersions(ctx context.Context, cfg *config.Config, input *sdk.DetermineVersionsInput[config.ApplicationConfigSpec]) (*sdk.DetermineVersionsResponse, error) {
+	versions := []sdk.ArtifactVersion{
+		{
+			Name:    "opentofu-files",
+			Version: input.Request.DeploymentSource.CommitHash,
+		},
+	}
 	return &sdk.DetermineVersionsResponse{
-		Versions: []sdk.ArtifactVersion{},
+		Versions: versions,
 	}, nil
 }
 
