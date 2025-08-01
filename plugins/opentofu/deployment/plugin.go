@@ -85,7 +85,9 @@ func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sd
 			Status: p.executePlanStage(ctx, input, dts),
 		}, nil
 	case stageApply:
-		panic("unimplemented")
+		return &sdk.ExecuteStageResponse{
+			Status: p.executeApplyStage(ctx, input, dts),
+		}, nil
 	case stageRollback:
 		panic("unimplemented")
 	default:

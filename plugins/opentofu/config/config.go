@@ -60,6 +60,8 @@ type OpenTofuPlanStageOptions struct {
 
 // OpenTofuApplyStageOptions contains all configurable values for an OPENTOFU_APPLY stage.
 type OpenTofuApplyStageOptions struct {
+	// AutoApprove enables -auto-approve flag for tofu apply.
+	AutoApprove bool `json:"autoApprove"`
 }
 
 // OpenTofuCommandFlags contains all additional flags that will be used while executing opentofu commands.
