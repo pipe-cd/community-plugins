@@ -20,7 +20,6 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 	downloadedSqldefPaths := make(map[config.DBType]string)
 
 	for _, dt := range dts {
-		// log deploy target info
 		lp.Infof("Deploy Target [%s]: host=%s, port=%s, db=%s, schemaFile=%s",
 			dt.Name,
 			dt.Config.Host,

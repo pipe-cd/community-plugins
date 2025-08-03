@@ -12,7 +12,6 @@ const (
 type Config struct{}
 
 type DeployTargetConfig struct {
-	// DbType include: mysql, psql, sqlite, and mssql
 	DbType DBType `json:"db_type"`
 	// DB connection info
 	Username string `json:"username"`

@@ -19,7 +19,7 @@ const (
 	sqldefStageRollback string = "SQLDEF_ROLLBACK"
 )
 
-// Plugin implements sdk.DeploymentPlugin for OpenTofu.
+// Plugin implements sdk.DeploymentPlugin for Sqldef.
 type Plugin struct {
 	Sqldef provider.SqldefProvider
 }
@@ -83,11 +83,9 @@ func (p *Plugin) ExecuteStage(
 		return &sdk.ExecuteStageResponse{
 			Status: p.executePlanStage(ctx, dts, input),
 		}, nil
+	default:
+		panic("unimplemented stage")
 	}
-
-	return &sdk.ExecuteStageResponse{
-		Status: sdk.StageStatusSuccess,
-	}, nil
 }
 
 // DetermineVersions determines the versions of artifacts for the deployment.

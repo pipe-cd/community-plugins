@@ -103,7 +103,7 @@ func (s *SqldefProviderImpl) Execute(ctx context.Context, dryRun bool) error {
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("mysqldef execution failed: %w\nstderr: %s", err, stderr.String())
+		return fmt.Errorf("Execution failed: %w\nstderr: %s", err, stderr.String())
 	}
 
 	if dryRun {
