@@ -20,8 +20,10 @@ import (
 	"slices"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
+	"go.uber.org/zap"
 
 	"github.com/pipe-cd/community-plugins/plugins/opentofu/config"
+	"github.com/pipe-cd/community-plugins/plugins/opentofu/provider"
 )
 
 const (
@@ -95,12 +97,18 @@ func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sd
 
 // DetermineVersions determines the versions of artifacts for the deployment.
 func (p *Plugin) DetermineVersions(ctx context.Context, cfg *config.Config, input *sdk.DetermineVersionsInput[config.ApplicationConfigSpec]) (*sdk.DetermineVersionsResponse, error) {
-	versions := []sdk.ArtifactVersion{
-		{
-			Name:    "opentofu-files",
-			Version: input.Request.DeploymentSource.CommitHash,
-		},
+	files, err := provider.LoadOpenTofuFiles(input.Request.DeploymentSource.ApplicationDirectory)
+	if err != nil {
+		input.Logger.Error("failed to load OpenTofu files", zap.Error(err))
+		return nil, err
 	}
+
+	versions, err := provider.FindArtifactVersions(files)
+	if err != nil || len(versions) == 0 {
+		input.Logger.Warn("unable to determine target versions", zap.Error(err))
+		versions = []sdk.ArtifactVersion{{Version: "unknown"}}
+	}
+
 	return &sdk.DetermineVersionsResponse{
 		Versions: versions,
 	}, nil
