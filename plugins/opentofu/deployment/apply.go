@@ -39,7 +39,7 @@ func (p *Plugin) executeApplyStage(ctx context.Context, input *sdk.ExecuteStageI
 		return sdk.StageStatusFailure
 	}
 
-	lp.Infof("Starting Apply stage. AutoApprove: %v", stageConfig.AutoApprove)
+	lp.Infof("Start executing apply.")
 
 	if err := cmd.Apply(ctx, lp); err != nil {
 		lp.Errorf("Failed to Apply (%v)", err)
