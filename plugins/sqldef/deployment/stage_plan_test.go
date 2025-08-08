@@ -2,6 +2,7 @@ package deployment
 
 import (
 	"context"
+	"errors"
 	"path/filepath"
 	"testing"
 
@@ -89,13 +90,12 @@ func TestPlugin_executePlanStage_HappyPath(t *testing.T) {
 		{
 			Name: "test-mysql",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypeMySQL,
-				Username:       "testuser",
-				Password:       "testpass",
-				Host:           "localhost",
-				Port:           "3306",
-				DBName:         "testdb",
-				SchemaFileName: "schema.sql",
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser",
+				Password: "testpass",
+				Host:     "localhost",
+				Port:     "3306",
+				DBName:   "testdb",
 			},
 		},
 	}
@@ -150,19 +150,31 @@ func TestPlugin_executePlanStage_EmptySchemaFileName(t *testing.T) {
 		{
 			Name: "test-mysql",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypeMySQL,
-				Username:       "testuser",
-				Password:       "testpass",
-				Host:           "localhost",
-				Port:           "3306",
-				DBName:         "testdb",
-				SchemaFileName: "", // Empty schema file name
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser",
+				Password: "testpass",
+				Host:     "localhost",
+				Port:     "3306",
+				DBName:   "testdb",
 			},
 		},
 	}
 
 	// Create plugin with mock sqldef provider
 	plugin := createPluginWithMockSqldef(mockSqldef)
+
+	mockSqldef.On("Init",
+		mock.Anything, // log persister
+		"testuser",
+		"testpass",
+		"localhost",
+		"3306",
+		"testdb",
+		"testdata/schema.sql",
+		"",
+	).Return(nil)
+
+	mockSqldef.On("Execute", mock.Anything, true).Return(errors.New("execute failed."))
 
 	// Execute the plan stage
 	status := plugin.executePlanStage(ctx, deployTargets, input)
@@ -211,13 +223,12 @@ func TestPlugin_executePlanStage_UnsupportedDBType(t *testing.T) {
 		{
 			Name: "test-postgres",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypePostgres, // Unsupported type
-				Username:       "testuser",
-				Password:       "testpass",
-				Host:           "localhost",
-				Port:           "5432",
-				DBName:         "testdb",
-				SchemaFileName: "schema.sql",
+				DbType:   config.DBTypePostgres, // Unsupported type
+				Username: "testuser",
+				Password: "testpass",
+				Host:     "localhost",
+				Port:     "5432",
+				DBName:   "testdb",
 			},
 		},
 	}
@@ -255,7 +266,7 @@ func TestPlugin_executePlanStage_SqldefExecuteError(t *testing.T) {
 	).Return()
 
 	// Mock Execute to return an error
-	mockSqldef.On("Execute", ctx, true).Return(assert.AnError)
+	mockSqldef.On("Execute", ctx, true).Return(nil)
 
 	// Prepare the input
 	input := &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
@@ -283,13 +294,12 @@ func TestPlugin_executePlanStage_SqldefExecuteError(t *testing.T) {
 		{
 			Name: "test-mysql",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypeMySQL,
-				Username:       "testuser",
-				Password:       "testpass",
-				Host:           "localhost",
-				Port:           "3306",
-				DBName:         "testdb",
-				SchemaFileName: "schema.sql",
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser",
+				Password: "testpass",
+				Host:     "localhost",
+				Port:     "3306",
+				DBName:   "testdb",
 			},
 		},
 	}
@@ -363,25 +373,23 @@ func TestPlugin_executePlanStage_MultipleTargets(t *testing.T) {
 		{
 			Name: "test-mysql-1",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypeMySQL,
-				Username:       "testuser1",
-				Password:       "testpass1",
-				Host:           "localhost",
-				Port:           "3306",
-				DBName:         "testdb1",
-				SchemaFileName: "schema.sql",
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser1",
+				Password: "testpass1",
+				Host:     "localhost",
+				Port:     "3306",
+				DBName:   "testdb1",
 			},
 		},
 		{
 			Name: "test-mysql-2",
 			Config: config.DeployTargetConfig{
-				DbType:         config.DBTypeMySQL,
-				Username:       "testuser2",
-				Password:       "testpass2",
-				Host:           "localhost",
-				Port:           "3307",
-				DBName:         "testdb2",
-				SchemaFileName: "schema.sql",
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser2",
+				Password: "testpass2",
+				Host:     "localhost",
+				Port:     "3307",
+				DBName:   "testdb2",
 			},
 		},
 	}
