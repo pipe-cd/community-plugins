@@ -16,9 +16,6 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 	// Currently, we create them every time the stage is executed beucause we can't pass input.Client.toolRegistry to the plugin when starting the plugin.
 	toolRegistry := toolRegistryPkg.NewRegistry(input.Client.ToolRegistry())
 
-	// map for prevent repeatedly download sqldef
-	downloadedSqldefPaths := make(map[config.DBType]string)
-
 	for _, dt := range dts {
 		lp.Infof("Deploy Target [%s]: host=%s, port=%s, db=%s, schemaFile=%s",
 			dt.Name,
@@ -27,19 +24,12 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 			dt.Config.DBName,
 		)
 
-		// check db_type from dt.config to choose which sqldef binary to download
-		var sqlDefPath string
-		var existed bool
-		if sqlDefPath, existed = downloadedSqldefPaths[dt.Config.DbType]; !existed {
-			binPath, err := toolRegistry.DownloadBinary(ctx, dt.Config.DbType)
-			if err != nil {
-				lp.Errorf("Failed while getting Sqldef tool (%v)", err)
-				return sdk.StageStatusFailure
-			}
-			downloadedSqldefPaths[dt.Config.DbType] = binPath
-			sqlDefPath = binPath
-			lp.Info(fmt.Sprintf("Sqldef binary downloaded: %s", sqlDefPath))
+		sqlDefPath, err := toolRegistry.DownloadBinary(ctx, dt.Config.DbType, "")
+		if err != nil {
+			lp.Errorf("Failed while getting Sqldef tool (%v)", err)
+			return sdk.StageStatusFailure
 		}
+		lp.Info(fmt.Sprintf("Sqldef binary downloaded: %s", sqlDefPath))
 
 		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
 		schemaPath, err := findFirstSQLFile(appDir)
