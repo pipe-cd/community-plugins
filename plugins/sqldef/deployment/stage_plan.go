@@ -28,25 +28,17 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 		)
 
 		// check db_type from dt.config to choose which sqldef binary to download
-		// Now we only support mysql temporarily
 		var sqlDefPath string
 		var existed bool
-		if sqlDefPath, existed = downloadedSqldefPaths[config.DBTypeMySQL]; !existed {
-			var binPath string
-			var err error
-			switch dt.Config.DbType {
-			case config.DBTypeMySQL:
-				binPath, err = toolRegistry.Mysqldef(ctx, "")
-			default:
-				lp.Errorf(fmt.Sprintf("Unsupported database type: %s, currently only support: mysql", dt.Name))
-				return sdk.StageStatusFailure
-			}
+		if sqlDefPath, existed = downloadedSqldefPaths[dt.Config.DbType]; !existed {
+			binPath, err := toolRegistry.DownloadBinary(ctx, dt.Config.DbType)
 			if err != nil {
 				lp.Errorf("Failed while getting Sqldef tool (%v)", err)
 				return sdk.StageStatusFailure
 			}
 			downloadedSqldefPaths[dt.Config.DbType] = binPath
-			lp.Info(fmt.Sprintf("Sqldef binary downloadeded: %s", sqlDefPath))
+			sqlDefPath = binPath
+			lp.Info(fmt.Sprintf("Sqldef binary downloaded: %s", sqlDefPath))
 		}
 
 		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
