@@ -91,7 +91,9 @@ func (p *Plugin) ExecuteStage(ctx context.Context, cfg *config.Config, dts []*sd
 			Status: p.executeApplyStage(ctx, input, dts),
 		}, nil
 	case stageRollback:
-		panic("unimplemented")
+		return &sdk.ExecuteStageResponse{
+			Status: p.executeRollbackStage(ctx, input, dts),
+		}, nil
 	default:
 		return nil, errors.New("unsupported stage")
 	}
