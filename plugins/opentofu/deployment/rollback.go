@@ -31,7 +31,7 @@ func (p *Plugin) executeRollbackStage(ctx context.Context, input *sdk.ExecuteSta
 		return sdk.StageStatusFailure
 	}
 
-	cmd, err := initOpenTofuCommand(ctx, input.Client, input.Request.TargetDeploymentSource, dts[0])
+	cmd, err := initOpenTofuCommand(ctx, input.Client, rds, dts[0])
 	if err != nil {
 		return sdk.StageStatusFailure
 	}
