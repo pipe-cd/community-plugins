@@ -19,6 +19,9 @@ package toolregistry
 import (
 	"cmp"
 	"context"
+	"fmt"
+
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/config"
 )
 
 const (
@@ -40,8 +43,13 @@ type Registry struct {
 	client client
 }
 
-// Mysqldef installs the mysqldef tool with the given version and return the path to the installed binary.
-// If the version is empty, the default version will be used.
-func (r *Registry) Mysqldef(ctx context.Context, version string) (string, error) {
-	return r.client.InstallTool(ctx, "mysqldef", cmp.Or(version, defaultSqldefVersion), MysqldefInstallScript)
+// DownloadBinary downloads the appropriate sqldef binary based on the database type.
+// Currently only supports MySQL, but can be extended for other database types.
+func (r *Registry) DownloadBinary(ctx context.Context, dbType config.DBType, version string) (string, error) {
+	switch dbType {
+	case config.DBTypeMySQL:
+		return r.client.InstallTool(ctx, "mysqldef", cmp.Or(version, defaultSqldefVersion), MysqldefInstallScript)
+	default:
+		return "", fmt.Errorf("unsupported database type: %s, currently only support: mysql", dbType)
+	}
 }

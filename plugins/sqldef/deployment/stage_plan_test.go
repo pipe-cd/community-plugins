@@ -171,7 +171,7 @@ func TestPlugin_executePlanStage_EmptySchemaFileName(t *testing.T) {
 		"3306",
 		"testdb",
 		"testdata/schema.sql",
-		"",
+		mock.AnythingOfType("string"), // execPath from tool registry
 	).Return(nil)
 
 	mockSqldef.On("Execute", mock.Anything, true).Return(errors.New("execute failed."))
