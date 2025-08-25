@@ -83,6 +83,10 @@ func (p *Plugin) ExecuteStage(
 		return &sdk.ExecuteStageResponse{
 			Status: p.executePlanStage(ctx, dts, input),
 		}, nil
+	case sqldefStageApply:
+		return &sdk.ExecuteStageResponse{
+			Status: p.executeApplyStage(ctx, dts, input),
+		}, nil
 	default:
 		panic("unimplemented stage")
 	}
