@@ -96,6 +96,7 @@ func TestRegistry_DownloadBinary(t *testing.T) {
 						assert.Contains(t, path, defaultSqldefVersion, "Expected default version in path")
 					}
 				}
+				// TODO: Add more dbType cases when supported
 			}
 		})
 	}

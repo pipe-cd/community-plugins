@@ -2,7 +2,6 @@ package deployment
 
 import (
 	"context"
-	"fmt"
 	"github.com/pipe-cd/community-plugins/plugins/sqldef/config"
 	toolRegistryPkg "github.com/pipe-cd/community-plugins/plugins/sqldef/toolregistry"
 
@@ -29,7 +28,6 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 			lp.Errorf("Failed while getting Sqldef tool (%v)", err)
 			return sdk.StageStatusFailure
 		}
-		lp.Info(fmt.Sprintf("Sqldef binary downloaded: %s", sqlDefPath))
 
 		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
 		schemaPath, err := findFirstSQLFile(appDir)
