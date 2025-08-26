@@ -29,7 +29,7 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 			return sdk.StageStatusFailure
 		}
 
-		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
+		appDir := input.Request.TargetDeploymentSource.ApplicationDirectory
 		schemaPath, err := findFirstSQLFile(appDir)
 		if err != nil {
 			lp.Errorf("Failed while finding schema file (%v)", err)
