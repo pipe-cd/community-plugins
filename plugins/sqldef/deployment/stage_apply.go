@@ -8,15 +8,15 @@ import (
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 )
 
-func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) sdk.StageStatus {
+func (p *Plugin) executeApplyStage(ctx context.Context, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) sdk.StageStatus {
 	lp := input.Client.LogPersister()
-	lp.Info("Start planning the schema deployment")
+	lp.Info("Start applying the schema deployment")
 
-	// Currently, we create them every time the stage is executed beucause we can't pass input.Client.toolRegistry to the plugin when starting the plugin.
+	// Currently, we create them every time the stage is executed because we can't pass input.Client.toolRegistry to the plugin when starting the plugin.
 	toolRegistry := toolRegistryPkg.NewRegistry(input.Client.ToolRegistry())
 
 	for _, dt := range dts {
-		lp.Infof("Deploy Target [%s]: host=%s, port=%s, db=%s, schemaFile=%s",
+		lp.Infof("Deploy Target [%s]: host=%s, port=%s, db=%s",
 			dt.Name,
 			dt.Config.Host,
 			dt.Config.Port,
@@ -38,8 +38,8 @@ func (p *Plugin) executePlanStage(ctx context.Context, dts []*sdk.DeployTarget[c
 
 		p.Sqldef.Init(lp, dt.Config.Username, dt.Config.Password, dt.Config.Host, dt.Config.Port, dt.Config.DBName, schemaPath, sqlDefPath)
 
-		if err := p.Sqldef.Execute(ctx, true); err != nil {
-			lp.Errorf("Failed while plan the deployment (%v)", err)
+		if err := p.Sqldef.Execute(ctx, false); err != nil {
+			lp.Errorf("Failed while applying the deployment (%v)", err)
 			return sdk.StageStatusFailure
 		}
 	}
