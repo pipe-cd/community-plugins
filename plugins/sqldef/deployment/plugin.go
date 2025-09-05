@@ -87,6 +87,10 @@ func (p *Plugin) ExecuteStage(
 		return &sdk.ExecuteStageResponse{
 			Status: p.executeApplyStage(ctx, dts, input),
 		}, nil
+	case sqldefStageRollback:
+		return &sdk.ExecuteStageResponse{
+			Status: p.executeRollbackStage(ctx, dts, input),
+		}, nil
 	default:
 		panic("unimplemented stage")
 	}
