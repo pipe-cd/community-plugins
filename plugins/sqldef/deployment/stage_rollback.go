@@ -22,9 +22,9 @@ import (
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 )
 
-func (p *Plugin) executeApplyStage(ctx context.Context, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) sdk.StageStatus {
+func (p *Plugin) executeRollbackStage(ctx context.Context, dts []*sdk.DeployTarget[config.DeployTargetConfig], input *sdk.ExecuteStageInput[config.ApplicationConfigSpec]) sdk.StageStatus {
 	lp := input.Client.LogPersister()
-	lp.Info("Start applying the schema deployment")
+	lp.Info("Start rollback the schema deployment")
 
 	// Currently, we create them every time the stage is executed because we can't pass input.Client.toolRegistry to the plugin when starting the plugin.
 	toolRegistry := toolRegistryPkg.NewRegistry(input.Client.ToolRegistry())
@@ -43,7 +43,7 @@ func (p *Plugin) executeApplyStage(ctx context.Context, dts []*sdk.DeployTarget[
 			return sdk.StageStatusFailure
 		}
 
-		appDir := input.Request.TargetDeploymentSource.ApplicationDirectory
+		appDir := input.Request.RunningDeploymentSource.ApplicationDirectory
 		schemaPath, err := findFirstSQLFile(appDir)
 		if err != nil {
 			lp.Errorf("Failed while finding schema file (%v)", err)
