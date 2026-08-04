@@ -16,6 +16,7 @@ package deployment
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 
@@ -50,7 +51,7 @@ func (p *Plugin) ExecuteStage(ctx context.Context, _ *sdk.ConfigNone, dts []*sdk
 			Status: p.executeAzureFuncRollbackStage(ctx, dts, input),
 		}, nil
 	default:
-		panic("unimplemented stage: " + input.Request.StageName)
+		return nil, fmt.Errorf("unimplemented stage: %q", input.Request.StageName)
 	}
 }
 
@@ -76,7 +77,7 @@ func (p *Plugin) DetermineVersions(ctx context.Context, _ *sdk.ConfigNone, d *sd
 			},
 		}, nil
 	default:
-		panic("not supported kind: " + appCfg.Spec.Kind)
+		return nil, fmt.Errorf("not supported kind: %q", appCfg.Spec.Kind)
 	}
 }
 
