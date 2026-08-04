@@ -19,6 +19,9 @@ import (
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/config"
 )
 
 func Test_BuildPipelineSyncStages(t *testing.T) {
@@ -145,4 +148,23 @@ func TestPlugin_BuildQuickSyncStages(t *testing.T) {
 			assert.Equal(t, tt.expected, got)
 		})
 	}
+}
+
+// Test_ExecuteStage_UnknownStage ensures that an unrecognized stage name
+// results in an error instead of a panic, since the stage name originates
+// from the pipeline configuration and can be malformed or unsupported.
+func Test_ExecuteStage_UnknownStage(t *testing.T) {
+	t.Parallel()
+
+	p := &Plugin{}
+
+	got, err := p.ExecuteStage(t.Context(), nil, nil, &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
+		Request: sdk.ExecuteStageRequest[config.ApplicationConfigSpec]{
+			StageName: "UNKNOWN_STAGE",
+		},
+	})
+
+	require.Error(t, err)
+	assert.Nil(t, got)
+	assert.Contains(t, err.Error(), "UNKNOWN_STAGE")
 }

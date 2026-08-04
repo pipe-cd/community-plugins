@@ -2,6 +2,7 @@ package deployment
 
 import (
 	"context"
+	"fmt"
 	"github.com/pipe-cd/community-plugins/plugins/sqldef/provider"
 	"slices"
 
@@ -92,7 +93,7 @@ func (p *Plugin) ExecuteStage(
 			Status: p.executeRollbackStage(ctx, dts, input),
 		}, nil
 	default:
-		panic("unimplemented stage")
+		return nil, fmt.Errorf("unimplemented stage: %q", input.Request.StageName)
 	}
 }
 
