@@ -171,7 +171,7 @@ func getFunctionSyncState(ctx context.Context, ds sdk.DeploymentSource[config.Az
 			update++
 			b.WriteString(fmt.Sprintf("# %d. Name:%s Type:%s\n\n", update, resourceName, resourceType))
 			for _, delta := range change.Delta {
-				renderWhatIfChange(b, *delta)
+				renderWhatIfChange(&b, *delta)
 			}
 			b.WriteString("\n")
 		}
@@ -182,7 +182,7 @@ func getFunctionSyncState(ctx context.Context, ds sdk.DeploymentSource[config.Az
 		Reason:      b.String(),
 	}, nil
 }
-func renderWhatIfChange(b strings.Builder, change armresources.WhatIfPropertyChange) {
+func renderWhatIfChange(b *strings.Builder, change armresources.WhatIfPropertyChange) {
 	switch *change.PropertyChangeType {
 	case armresources.PropertyChangeTypeCreate:
 		b.WriteString(fmt.Sprintf("+ path:%s value:%s\n\n", *change.Path, change.After))
