@@ -186,6 +186,66 @@ func TestPlugin_executePlanStage_EmptySchemaFileName(t *testing.T) {
 	mockSqldef.AssertExpectations(t)
 }
 
+func TestPlugin_executePlanStage_SchemaFileNotFound(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+
+	// Initialize tool registry
+	testRegistry := toolregistrytest.NewTestToolRegistry(t)
+
+	// Create mock sqldef provider (won't be called due to schema file not found)
+	mockSqldef := &MockSqldefProvider{}
+
+	// Prepare the input with non-existent directory
+	input := &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
+		Request: sdk.ExecuteStageRequest[config.ApplicationConfigSpec]{
+			StageName:   sqldefStagePlan,
+			StageConfig: []byte(``),
+			RunningDeploymentSource: sdk.DeploymentSource[config.ApplicationConfigSpec]{
+				ApplicationDirectory: "nonexistent",
+				CommitHash:           "0123456789",
+			},
+			TargetDeploymentSource: sdk.DeploymentSource[config.ApplicationConfigSpec]{
+				ApplicationDirectory: "nonexistent",
+				CommitHash:           "0123456789",
+			},
+			Deployment: sdk.Deployment{
+				PipedID:       "piped-id",
+				ApplicationID: "app-id",
+			},
+		},
+		Client: sdk.NewClient(nil, "sqldef", "", "", logpersistertest.NewTestLogPersister(t), testRegistry),
+	}
+
+	// Create deploy targets
+	deployTargets := []*sdk.DeployTarget[config.DeployTargetConfig]{
+		{
+			Name: "test-mysql",
+			Config: config.DeployTargetConfig{
+				DbType:   config.DBTypeMySQL,
+				Username: "testuser",
+				Password: "testpass",
+				Host:     "localhost",
+				Port:     "3306",
+				DBName:   "testdb",
+			},
+		},
+	}
+
+	// Create plugin with mock sqldef provider
+	plugin := createPluginWithMockSqldef(mockSqldef)
+
+	// Execute the plan stage
+	status := plugin.executePlanStage(ctx, deployTargets, input)
+
+	// Assert failure
+	assert.Equal(t, sdk.StageStatusFailure, status)
+
+	// Verify mock expectations (should be none since schema file not found)
+	mockSqldef.AssertExpectations(t)
+}
+
 func TestPlugin_executePlanStage_UnsupportedDBType(t *testing.T) {
 	t.Parallel()
 

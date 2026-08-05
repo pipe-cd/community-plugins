@@ -15,11 +15,163 @@
 package deployment
 
 import (
+	"context"
+	"path/filepath"
 	"testing"
 
 	sdk "github.com/pipe-cd/piped-plugin-sdk-go"
+	"github.com/pipe-cd/piped-plugin-sdk-go/logpersister/logpersistertest"
+	"github.com/pipe-cd/piped-plugin-sdk-go/toolregistry/toolregistrytest"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+
+	"github.com/pipe-cd/community-plugins/plugins/sqldef/config"
 )
+
+func TestPlugin_FetchDefinedStages(t *testing.T) {
+	t.Parallel()
+
+	p := &Plugin{}
+
+	got := p.FetchDefinedStages()
+
+	assert.Equal(t, []string{sqldefStagePlan, sqldefStageApply, sqldefStageRollback}, got)
+}
+
+func TestPlugin_DetermineVersions(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		commitHash string
+	}{
+		{name: "non-empty commit hash", commitHash: "0123456789"},
+		{name: "empty commit hash", commitHash: ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			p := &Plugin{}
+			input := &sdk.DetermineVersionsInput[config.ApplicationConfigSpec]{
+				Request: sdk.DetermineVersionsRequest[config.ApplicationConfigSpec]{
+					DeploymentSource: sdk.DeploymentSource[config.ApplicationConfigSpec]{
+						CommitHash: tt.commitHash,
+					},
+				},
+			}
+
+			got, err := p.DetermineVersions(t.Context(), nil, input)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &sdk.DetermineVersionsResponse{
+				Versions: []sdk.ArtifactVersion{{Version: tt.commitHash}},
+			}, got)
+		})
+	}
+}
+
+func TestPlugin_DetermineStrategy(t *testing.T) {
+	t.Parallel()
+
+	p := &Plugin{}
+
+	got, err := p.DetermineStrategy(t.Context(), nil, &sdk.DetermineStrategyInput[config.ApplicationConfigSpec]{})
+
+	assert.NoError(t, err)
+	assert.Nil(t, got)
+}
+
+func TestPlugin_ExecuteStage_UnimplementedStage(t *testing.T) {
+	t.Parallel()
+
+	p := &Plugin{}
+	input := &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
+		Request: sdk.ExecuteStageRequest[config.ApplicationConfigSpec]{
+			StageName: "SQLDEF_UNKNOWN",
+		},
+	}
+
+	assert.Panics(t, func() {
+		//nolint:errcheck
+		p.ExecuteStage(context.Background(), nil, nil, input)
+	})
+}
+
+func TestPlugin_ExecuteStage_Dispatch(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		stageName string
+		dryRun    bool
+	}{
+		{name: "plan stage", stageName: sqldefStagePlan, dryRun: true},
+		{name: "apply stage", stageName: sqldefStageApply, dryRun: false},
+		{name: "rollback stage", stageName: sqldefStageRollback, dryRun: false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ctx := context.Background()
+			testRegistry := toolregistrytest.NewTestToolRegistry(t)
+			mockSqldef := &MockSqldefProvider{}
+
+			mockSqldef.On("Init",
+				mock.AnythingOfType("logpersistertest.TestLogPersister"),
+				"testuser", "testpass", "localhost", "3306", "testdb",
+				filepath.Join("testdata", "schema.sql"),
+				mock.AnythingOfType("string"),
+			).Return()
+			mockSqldef.On("Execute", ctx, tt.dryRun).Return(nil)
+
+			input := &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
+				Request: sdk.ExecuteStageRequest[config.ApplicationConfigSpec]{
+					StageName:   tt.stageName,
+					StageConfig: []byte(``),
+					RunningDeploymentSource: sdk.DeploymentSource[config.ApplicationConfigSpec]{
+						ApplicationDirectory: "testdata",
+						CommitHash:           "0123456789",
+					},
+					TargetDeploymentSource: sdk.DeploymentSource[config.ApplicationConfigSpec]{
+						ApplicationDirectory: "testdata",
+						CommitHash:           "0123456789",
+					},
+					Deployment: sdk.Deployment{
+						PipedID:       "piped-id",
+						ApplicationID: "app-id",
+					},
+				},
+				Client: sdk.NewClient(nil, "sqldef", "", "", logpersistertest.NewTestLogPersister(t), testRegistry),
+			}
+
+			deployTargets := []*sdk.DeployTarget[config.DeployTargetConfig]{
+				{
+					Name: "test-mysql",
+					Config: config.DeployTargetConfig{
+						DbType:   config.DBTypeMySQL,
+						Username: "testuser",
+						Password: "testpass",
+						Host:     "localhost",
+						Port:     "3306",
+						DBName:   "testdb",
+					},
+				},
+			}
+
+			plugin := createPluginWithMockSqldef(mockSqldef)
+
+			got, err := plugin.ExecuteStage(ctx, nil, deployTargets, input)
+
+			assert.NoError(t, err)
+			assert.Equal(t, &sdk.ExecuteStageResponse{Status: sdk.StageStatusSuccess}, got)
+			mockSqldef.AssertExpectations(t)
+		})
+	}
+}
 
 func Test_BuildPipelineSyncStages(t *testing.T) {
 	tests := []struct {
