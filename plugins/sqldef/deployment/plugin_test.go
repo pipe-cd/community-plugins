@@ -83,21 +83,10 @@ func TestPlugin_DetermineStrategy(t *testing.T) {
 	assert.Nil(t, got)
 }
 
-func TestPlugin_ExecuteStage_UnimplementedStage(t *testing.T) {
-	t.Parallel()
-
-	p := &Plugin{}
-	input := &sdk.ExecuteStageInput[config.ApplicationConfigSpec]{
-		Request: sdk.ExecuteStageRequest[config.ApplicationConfigSpec]{
-			StageName: "SQLDEF_UNKNOWN",
-		},
-	}
-
-	assert.Panics(t, func() {
-		//nolint:errcheck
-		p.ExecuteStage(context.Background(), nil, nil, input)
-	})
-}
+// Note: ExecuteStage's behavior for an unrecognized stage name (currently a
+// panic) is covered by a separate fix that replaces the panic with an error
+// return; that PR owns the regression test for this branch, since asserting
+// the panic here would break as soon as that fix lands.
 
 func TestPlugin_ExecuteStage_Dispatch(t *testing.T) {
 	t.Parallel()
