@@ -23,3 +23,5 @@ gomock_reflect_*/
 
 # other
 .DS_Store
+config.bat
+node_modules
