@@ -20,6 +20,7 @@ body:
         - ansible
         - azure-functions
         - example-stage
+        - httpcheck
         - opentofu
         - sqldef
         # --- End plugins list ---

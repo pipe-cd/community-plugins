@@ -18,6 +18,10 @@ plugin/example-stage:
   - changed-files:
       - any-glob-to-any-file: plugins/example-stage/**
 
+plugin/httpcheck:
+  - changed-files:
+      - any-glob-to-any-file: plugins/httpcheck/**
+
 plugin/opentofu:
   - changed-files:
       - any-glob-to-any-file: plugins/opentofu/**
