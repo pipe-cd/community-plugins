@@ -57,5 +57,48 @@ go mod init github.com/pipe-cd/community-plugins/$PLUGIN_DIR
 mv go.mod go.mod.tmp
 popd
 
+# 1-4. main.go
+cat <<EOF > $PLUGIN_DIR/main.go
+package main
+
+import (
+	"log"
+
+	"github.com/pipe-cd/pipecd/pkg/plugin/sdk/go/plugin"
+	"github.com/pipe-cd/community-plugins/plugins/$PLUGIN_NAME/deployment"
+)
+
+func main() {
+	if err := plugin.Run(&deployment.Plugin{}); err != nil {
+		log.Fatalf("failed to run plugin: %v\n", err)
+	}
+}
+EOF
+
+# 1-5. deployment/plugin.go
+mkdir -p $PLUGIN_DIR/deployment
+cat <<EOF > $PLUGIN_DIR/deployment/plugin.go
+package deployment
+
+import (
+	"context"
+
+	"github.com/pipe-cd/pipecd/pkg/plugin/sdk/go/plugin"
+)
+
+type Plugin struct{}
+
+// Ensure Plugin implements the deployment plugin API.
+var _ plugin.DeploymentPlugin = (*Plugin)(nil)
+
+func (p *Plugin) Name() string {
+	return "$PLUGIN_NAME"
+}
+
+func (p *Plugin) Version() string {
+	return "0.1.0"
+}
+EOF
+
 # 2. Update Issue templates, CODEOWNERS
 make sync
